@@ -10,6 +10,7 @@ const {
   updateContact,
 } = require("../../models/contacts");
 
+
 router.route("/")
     .get(listContacts)
     .post(addContact);
