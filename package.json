@@ -13,14 +13,8 @@
     "cross-env": "7.0.3",
     "dotenv": "^16.0.3",
     "express": "4.17.1",
-<<<<<<< HEAD
     "joi": "^17.8.4",
     "mongoose": "^7.0.1"
-=======
-    "joi": "^17.8.3",
-    "morgan": "1.10.0",
-    "uuid": "^9.0.0"
->>>>>>> d9b914df5906d3e03c7a15dd38331283879d5380
   },
   "devDependencies": {
     "eslint": "7.19.0",
