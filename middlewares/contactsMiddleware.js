@@ -3,13 +3,13 @@ const {
 } = require("mongoose");
 
 const Contact = require("../models/contactModel");
-const { joiSchema, AppError, catchAsync } = require("../utils");
+const { validators, AppError, catchAsync } = require("../utils");
 
 /**
  * Check new contact
  */
 const checkContact = catchAsync(async (req, res, next) => {
-  const { error, value } = joiSchema.validate(req.body);
+  const { error, value } = validators.createContactValidator(req.body);
 
   if (error) {
     return next(new AppError(400, error.details[0].message));
@@ -21,6 +21,21 @@ const checkContact = catchAsync(async (req, res, next) => {
 
   if (contactExists) {
     return next(new AppError(409, "Contact with this email already exists"));
+  }
+
+  req.body = value;
+
+  next();
+});
+
+/**
+ * Check contact update
+ */
+const checkContactUpdate = catchAsync(async (req, res, next) => {
+  const { error, value } = validators.updateContactValidator(req.body);
+
+  if (error) {
+    return next(new AppError(400, error.details[0].message));
   }
 
   req.body = value;
@@ -41,4 +56,4 @@ const checkContactId = catchAsync(async (req, res, next) => {
   next();
 });
 
-module.exports = { checkContact, checkContactId };
+module.exports = { checkContact, checkContactUpdate, checkContactId };
