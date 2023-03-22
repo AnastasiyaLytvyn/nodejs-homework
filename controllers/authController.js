@@ -48,7 +48,6 @@ const login = catchAsync(async (req, res, next) => {
   user.password = undefined;
 
   const token = signToken(user.id);
-  console.log(token);
 
   await User.findByIdAndUpdate(user.id, { token });
 
@@ -63,7 +62,7 @@ const login = catchAsync(async (req, res, next) => {
  */
 const logout = catchAsync(async (req, res, next) => {
   const { id } = req.user;
-  console.log(id);
+
   const user = await User.findByIdAndUpdate(id, { token: null });
 
   if (!user) return next(new AppError(401, "Not authorized"));
@@ -74,13 +73,12 @@ const logout = catchAsync(async (req, res, next) => {
 /**
  * Current user controller
  */
-const currentUser = catchAsync(async (req, res) => {
+const getCurrentUser = catchAsync(async (req, res) => {
   const { email, subscription } = req.user;
 
   res.status(200).json({
-    user: email,
-    subscription,
+    user: { email, subscription },
   });
 });
 
-module.exports = { signup, login, logout, currentUser };
+module.exports = { signup, login, logout, getCurrentUser };

@@ -9,17 +9,14 @@ const { catchAsync, validators, AppError } = require("../utils");
 const checkSignupData = catchAsync(async (req, res, next) => {
   const { error, value } = validators.signupUserValidator(req.body);
 
-  if (error) {
-    return next(new AppError(400, error.details[0].message));
-  }
+  if (error) return next(new AppError(400, error.details[0].message));
 
   const { email } = value;
 
   const userExists = await User.exists({ email });
 
-  if (userExists) {
+  if (userExists)
     return next(new AppError(409, "User with this email already exists"));
-  }
 
   req.body = value;
 
@@ -39,8 +36,9 @@ const protect = catchAsync(async (req, res, next) => {
   const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
   const currentUser = await User.findById(decodedToken.id);
-  
-  if (!currentUser || !currentUser.token) return next(new AppError(401, "Not authorized"));
+
+  if (!currentUser || !currentUser.token)
+    return next(new AppError(401, "Not authorized"));
 
   req.user = currentUser;
 
