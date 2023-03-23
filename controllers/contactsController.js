@@ -4,12 +4,22 @@ const Contact = require("../models/contactModel");
 /**
  * Get contacts list
  */
-const getContacts = catchAsync(async (req, res, next) => {
-  const contacts = await Contact.find();
+const getContacts = catchAsync(async (req, res) => {
+  const { page = 1, limit = 20, favorite } = req.query;
+  const { _id } = req.user;
+
+  const skip = (page - 1) * limit;
+
+  //pagination
+  const contacts = await Contact.find(
+    favorite ? { owner: _id, favorite } : { owner: _id },
+    "",
+    { skip, limit: +limit }
+  ).populate("owner", "id email subscription");
 
   res.status(200).json({
     total: contacts.length,
-    contacts,    
+    contacts,
   });
 });
 
@@ -31,12 +41,14 @@ const getContact = catchAsync(async (req, res, next) => {
  */
 const addContact = catchAsync(async (req, res, next) => {
   const { name, email, phone, favorite } = req.body;
+  const { _id } = req.user;
 
   const newContact = await Contact.create({
     name,
     email,
     phone,
     favorite,
+    owner: _id,
   });
 
   res.status(201).json({
