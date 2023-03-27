@@ -25,7 +25,7 @@ const updateAvatar = catchAsync(async (req, res) => {
   const { _id: id } = req.user;
   const imageName = `${id}_${originalname}`;
 
-  const resultUpload = (avatarsDir, originalname);
+  const resultUpload = path.join(avatarsDir, imageName);
   await fs.rename(tempUpload, resultUpload);
 
   const avatarURL = path.join("public", "avatars", imageName);
