@@ -5,6 +5,11 @@ const { enums } = require("../utils");
 
 const userSchema = new Schema(
   {
+    name: {
+      type: String,
+      minlength: 2,
+      required: true,
+    },
     password: {
       type: String,
       minlength: 8,
@@ -24,6 +29,10 @@ const userSchema = new Schema(
     token: {
       type: String,
       default: null,
+    },
+    avatarURL: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }
