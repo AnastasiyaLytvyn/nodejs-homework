@@ -5,7 +5,7 @@ const User = require("../models/userModel");
 const { catchAsync } = require("../utils");
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
-console.log(avatarsDir);
+
 /**
  * Current user controller
  */

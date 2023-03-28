@@ -10,6 +10,6 @@ const { protect } = require("../middlewares/authMiddlewares");
 const upload = require("../middlewares/uploadMiddlewares");
 
 router.route("/current").post(protect, getCurrentUser);
-router.route("/avatar").patch(protect, upload.single("avatar"), updateAvatar);
+router.route("/avatar").patch(protect, upload, updateAvatar);
 
 module.exports = router;
