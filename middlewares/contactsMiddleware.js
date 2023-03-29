@@ -3,25 +3,24 @@ const {
 } = require("mongoose");
 
 const Contact = require("../models/contactModel");
-const { validators, AppError, catchAsync } = require("../utils");
+const { AppError } = require("../utils/errorHandler");
+const { catchAsync } = require("../utils/catchAsync");
+const { contactsValidators } = require("../utils/validators");
 
 /**
  * Check new contact
  */
 const checkContact = catchAsync(async (req, res, next) => {
-  const { error, value } = validators.createContactValidator(req.body);
+  const { error, value } = contactsValidators.createContactValidator(req.body);
 
-  if (error) {
-    return next(new AppError(400, error.details[0].message));
-  }
+  if (error) return next(new AppError(400, error.details[0].message));
 
   const { email } = value;
 
   const contactExists = await Contact.exists({ email });
 
-  if (contactExists) {
+  if (contactExists)
     return next(new AppError(409, "Contact with this email already exists"));
-  }
 
   req.body = value;
 
@@ -32,11 +31,9 @@ const checkContact = catchAsync(async (req, res, next) => {
  * Check contact update
  */
 const checkContactUpdate = catchAsync(async (req, res, next) => {
-  const { error, value } = validators.updateContactValidator(req.body);
+  const { error, value } = contactsValidators.updateContactValidator(req.body);
 
-  if (error) {
-    return next(new AppError(400, error.details[0].message));
-  }
+  if (error) return next(new AppError(400, error.details[0].message));
 
   req.body = value;
 
@@ -49,9 +46,13 @@ const checkContactUpdate = catchAsync(async (req, res, next) => {
 const checkContactId = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
-  if (!ObjectId.isValid(id)) {
-    return next(new AppError(400, "Invalid user id.."));
-  }
+  if (!ObjectId.isValid(id))
+    return next(new AppError(400, "Invalid contact id"));
+
+  const contact = await Contact.findById(id);
+  
+  if (!contact)
+    return next(new AppError(400, "Contact with this id not exist"));
 
   next();
 });

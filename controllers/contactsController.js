@@ -1,21 +1,27 @@
-const { catchAsync } = require("../utils");
+const { catchAsync } = require("../utils/catchAsync");
 const Contact = require("../models/contactModel");
 
 /**
  * Get contacts list
  */
 const getContacts = catchAsync(async (req, res) => {
-  const { page = 1, limit = 20, favorite } = req.query;
   const { _id } = req.user;
-
+  const { page = 1, limit = 20, favorite } = req.query;
   const skip = (page - 1) * limit;
 
+  //check favorites
+  const filter = { owner: _id };
+
+  if (favorite === "true") {
+    filter.favorite = true;
+  } else if (favorite === "false") {
+    filter.favorite = false;
+  }
   //pagination
-  const contacts = await Contact.find(
-    favorite ? { owner: _id, favorite } : { owner: _id },
-    "",
-    { skip, limit: +limit }
-  ).populate("owner", "id email subscription");
+  const contacts = await Contact.find(filter)
+    .limit(limit)
+    .skip(skip)
+    .populate("owner", "id email subscription");
 
   res.status(200).json({
     total: contacts.length,
@@ -31,9 +37,7 @@ const getContact = catchAsync(async (req, res, next) => {
 
   const contact = await Contact.findById(id);
 
-  res.status(200).json({
-    contact,
-  });
+  res.status(200).json({ contact });
 });
 
 /**
@@ -51,9 +55,7 @@ const addContact = catchAsync(async (req, res, next) => {
     owner: _id,
   });
 
-  res.status(201).json({
-    contact: newContact,
-  });
+  res.status(201).json({ contact: newContact });
 });
 
 /**
@@ -74,9 +76,7 @@ const updateContact = catchAsync(async (req, res, next) => {
     { new: true }
   );
 
-  res.status(200).json({
-    updateContact,
-  });
+  res.status(200).json({ updateContact });
 });
 
 /**
@@ -92,9 +92,7 @@ const favoriteContact = catchAsync(async (req, res, next) => {
     { new: true }
   );
 
-  res.status(200).json({
-    updateContact,
-  });
+  res.status(200).json({ updateContact });
 });
 
 /**
@@ -105,7 +103,7 @@ const removeContact = catchAsync(async (req, res, next) => {
 
   await Contact.findByIdAndDelete(id);
 
-  res.sendStatus(200);
+  res.status(200).json({ id });
 });
 
 module.exports = {

@@ -2,14 +2,17 @@ const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
 
 const User = require("../models/userModel");
-const { catchAsync, enums, AppError } = require("../utils");
+const { AppError } = require("../utils/errorHandler");
+const { catchAsync } = require("../utils/catchAsync");
+const enums = require("../constants/enums");
 
+const { JWT_SECRET, JWT_EXPIRES } = process.env;
 /**
  * Sign jwt helper function
  */
 const signToken = (id) =>
-  jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES,
+  jwt.sign({ id }, JWT_SECRET, {
+    expiresIn: JWT_EXPIRES,
   });
 
 /**

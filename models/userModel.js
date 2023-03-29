@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 const bcrypt = require("bcrypt");
 
-const { enums } = require("../utils");
+const enums = require("../constants/enums");
 
 const userSchema = new Schema(
   {
@@ -33,6 +33,13 @@ const userSchema = new Schema(
     avatarURL: {
       type: String,
       required: true,
+    },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
     },
   },
   { timestamps: true }

@@ -21,9 +21,7 @@ const { protect } = require("../middlewares/authMiddlewares");
 
 router.use(protect);
 
-router.route("/")
-  .get(getContacts)
-  .post(checkContact, addContact);
+router.route("/").get(getContacts).post(checkContact, addContact);
 
 router.use("/:id", checkContactId);
 

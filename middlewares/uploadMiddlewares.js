@@ -19,4 +19,4 @@ const upload = multer({
   storage: multerConfig,
 }).single("avatar");
 
-module.exports = upload;
+module.exports = { upload };

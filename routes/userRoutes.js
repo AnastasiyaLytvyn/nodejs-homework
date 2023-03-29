@@ -7,7 +7,7 @@ const {
   updateAvatar,
 } = require("../controllers/userController");
 const { protect } = require("../middlewares/authMiddlewares");
-const upload = require("../middlewares/uploadMiddlewares");
+const { upload } = require("../middlewares/uploadMiddlewares");
 
 router.route("/current").post(protect, getCurrentUser);
 router.route("/avatar").patch(protect, upload, updateAvatar);

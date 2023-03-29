@@ -2,7 +2,7 @@ const path = require("path");
 const fs = require("fs/promises");
 
 const User = require("../models/userModel");
-const { catchAsync } = require("../utils");
+const { catchAsync } = require("../utils/catchAsync");
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
