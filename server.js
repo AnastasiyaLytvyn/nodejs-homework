@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 
 const app = require("./app");
 
-dotenv.config({ path: "./.env" });
+dotenv.config({ path: "./.env" })
 
 const { MONGO_URL, PORT } = process.env;
 
