@@ -9,7 +9,6 @@ const contactSchema = new Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
       lowercase: true,
     },
     phone: {
@@ -22,7 +21,7 @@ const contactSchema = new Schema(
     },
     owner: {
       type: Types.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
   },
   { timestamps: true }

@@ -1,13 +1,15 @@
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/userModel");
-const { catchAsync, validators, AppError } = require("../utils");
+const { AppError } = require("../utils/errorHandler");
+const { catchAsync } = require("../utils/catchAsync");
+const { authValidators } = require("../utils/validators");
 
 /**
  * Check signup user data
  */
 const checkSignupData = catchAsync(async (req, res, next) => {
-  const { error, value } = validators.signupUserValidator(req.body);
+  const { error, value } = authValidators.signupUserValidator(req.body);
 
   if (error) return next(new AppError(400, error.details[0].message));
 
@@ -17,6 +19,19 @@ const checkSignupData = catchAsync(async (req, res, next) => {
 
   if (userExists)
     return next(new AppError(409, "User with this email already exists"));
+
+  req.body = value;
+
+  next();
+});
+
+/**
+ * Check login user data
+ */
+const checkLoginData = catchAsync(async (req, res, next) => {
+  const { error, value } = authValidators.loginUserValidation(req.body);
+
+  if (error) return next(new AppError(400, error.details[0].message));
 
   req.body = value;
 
@@ -45,4 +60,4 @@ const protect = catchAsync(async (req, res, next) => {
   next();
 });
 
-module.exports = { checkSignupData, protect };
+module.exports = { checkSignupData, checkLoginData, protect };
