@@ -1,29 +1,28 @@
 const nodemailer = require("nodemailer");
+require("dotenv").config();
+
+const { META_USER, META_PASSWORD, BASE_URL } = process.env;
 
 const config = {
   host: "smtp.meta.ua",
   port: 465,
   secure: true,
   auth: {
-    user: "anastasiialytvynd@meta.ua",
-    pass: process.env.META_PASSWORD,
+    user: META_USER,
+    pass: META_PASSWORD,
   },
 };
 
-const sendMail = async (userEmail, verificationToken) => {
-  console.log(userEmail);
+const transporter = nodemailer.createTransport(config);
 
-  const transporter = nodemailer.createTransport(config);
-
+const sendMail = async (userName, userEmail, verificationToken) => {
   const emailOptions = {
-    from: "anastasiialytvynd@meta.ua",
+    from: META_USER,
     to: userEmail,
     subject: "Confirm email",
-    html: `<a target="_blank" href="${process.env.BASE_URL}/api/auth/verify/${verificationToken}">Click verify email</a>`,
+    html: `<p>${userName}, verify your email to continue using the application</p><a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationToken}">Click to verify email</a>`,
   };
 
-    console.log(emailOptions);
-    
   try {
     await transporter.sendMail(emailOptions);
   } catch (error) {
